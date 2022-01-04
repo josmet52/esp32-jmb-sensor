@@ -1,2 +1,2 @@
 # esp32-jmb-sensor
-Air sensor on ESP32 withMicropython BLE
+Air sensor on ESP32 with Micropython BLE
