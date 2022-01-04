@@ -48,9 +48,7 @@ class BLE():
             buffer = self.ble.gatts_read(self.rx)
             message = buffer.decode('UTF-8').strip()
             if message[:3] == 'jmb':
-#                 print(message)
                 data = message.split(' ')
-#                 print(data)
                 msg = 'temp:' + data[1] + '°C hum:' + data[2] + '% pres:' + data[3] + 'hPa air:' + data[4] +'%'
                 print(msg, '\n')
                 
