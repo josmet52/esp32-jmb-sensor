@@ -6,7 +6,7 @@ import ubluetooth
 
 class BLE():
     def __init__(self, name):   
-#         print('---> def __init__')
+        print('---> def __init__')
         self.name = name
         self.ble = ubluetooth.BLE()
         self.ble.active(True)
@@ -21,18 +21,18 @@ class BLE():
         self.advertiser()
 
     def connected(self):        
-#         print('---> def connected')
+        print('---> def connected')
         self.timer1.deinit()
         self.timer2.deinit()
 
     def disconnected(self):        
-#         print('---> def disconnected')
+        print('---> def disconnected')
         self.timer1.init(period=1000, mode=Timer.PERIODIC, callback=lambda t: self.led(1))
         sleep_ms(200)
         self.timer2.init(period=1000, mode=Timer.PERIODIC, callback=lambda t: self.led(0))
 
     def ble_irq(self, event, data):
-#         print('---> def ble_irq', 'event', event, 'data', data)
+        print('---> def ble_irq', 'event', event, 'data', data)
         if event == 1:
             '''Central disconnected'''
             self.connected()
@@ -47,8 +47,9 @@ class BLE():
             '''New message received'''            
             buffer = self.ble.gatts_read(self.rx)
             message = buffer.decode('UTF-8').strip()
-            if message[:3] == 'jmb':
-                data = message.split(' ')
+            if message[:2] == 'jmb':
+                data = bytes(message).decode('utf-8').split(' ')
+                print(data)
                 msg = 'temp:' + data[1] + '°C hum:' + data[2] + '% pres:' + data[3] + 'hPa air:' + data[4] +'%'
                 print(msg, '\n')
                 
@@ -68,7 +69,7 @@ class BLE():
                 ble.send('--humidity--val--')
            
     def register(self):        
-#         print('---> def register')
+        print('---> def register')
         # Nordic UART Service (NUS)
         NUS_UUID = '6E400001-B5A3-F393-E0A9-E50E24DCCA9E'
         RX_UUID = '6E400002-B5A3-F393-E0A9-E50E24DCCA9E'
@@ -83,7 +84,7 @@ class BLE():
         ((self.tx, self.rx,), ) = self.ble.gatts_register_services(SERVICES)
 
     def send(self, data):
-#         print('---> def send', 'data', data)
+        print('---> def send', 'data', data)
         self.ble.gatts_notify(0, self.tx, data + '\n')
 
     def advertiser(self):
